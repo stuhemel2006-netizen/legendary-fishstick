@@ -1,59 +1,18 @@
-nakib@nakib-ThinkPad-L14-Gen-2a:~$ curl -fsSL https://tailscale.com/install.sh | sh
-Installing Tailscale for ubuntu resolute, using method apt
-+ sudo mkdir -p --mode=0755 /usr/share/keyrings
-All frames were too dark, please check dark_threshold in config
-Average darkness: 0.0, Threshold: 100.0
-[sudo error] Face detection image too dark
-[sudo: authenticate] Password:                
-+ curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/resolute.noarmor.gpg
-+ sudo tee /usr/share/keyrings/tailscale-archive-keyring.gpg
-+ sudo chmod 0644 /usr/share/keyrings/tailscale-archive-keyring.gpg
-+ curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/resolute.tailscale-keyring.list
-+ sudo tee /etc/apt/sources.list.d/tailscale.list
-# Tailscale packages for ubuntu resolute
-deb [signed-by=/usr/share/keyrings/tailscale-archive-keyring.gpg] https://pkgs.tailscale.com/stable/ubuntu resolute main
-+ sudo chmod 0644 /etc/apt/sources.list.d/tailscale.list
-+ sudo apt-get update
-Hit:1 https://brave-browser-apt-release.s3.brave.com stable InRelease
-Hit:2 https://dl.google.com/linux/chrome-stable/deb stable InRelease                                                                                                     
-Hit:3 https://packages.microsoft.com/repos/code stable InRelease                                                                                                         
-Get:4 https://pkgs.tailscale.com/stable/ubuntu resolute InRelease                                                                                    
-Hit:5 http://bd.archive.ubuntu.com/ubuntu resolute InRelease                                                                   
-Hit:6 http://security.ubuntu.com/ubuntu resolute-security InRelease                                     
-Get:7 https://pkgs.tailscale.com/stable/ubuntu resolute/main all Packages [351 B]                       
-Hit:8 http://bd.archive.ubuntu.com/ubuntu resolute-updates InRelease                                            
-Hit:9 http://bd.archive.ubuntu.com/ubuntu resolute-backports InRelease
-Get:10 https://pkgs.tailscale.com/stable/ubuntu resolute/main amd64 Packages [16.3 kB]
-Hit:11 https://ppa.launchpadcontent.net/ubuntuhandbook1/howdy/ubuntu resolute InRelease
-Get:12 https://pkgs.tailscale.com/stable/ubuntu resolute/main i386 Packages [15.9 kB]
-Fetched 39.2 kB in 1s (26.7 kB/s)
-Reading package lists... Done
-+ [ -n  ]
-+ sudo apt-get install -y tailscale tailscale-archive-keyring
-Reading package lists... Done
-Building dependency tree... Done
-Reading state information... Done
-Solving dependencies... Done
-The following NEW packages will be installed:
-  tailscale tailscale-archive-keyring
-0 upgraded, 2 newly installed, 0 to remove and 16 not upgraded.
-Need to get 38.7 MB of archives.
-After this operation, 76.0 MB of additional disk space will be used.
-Get:1 https://pkgs.tailscale.com/stable/ubuntu resolute/main amd64 tailscale amd64 1.102.4 [38.7 MB]
-Get:2 https://pkgs.tailscale.com/stable/ubuntu resolute/main all tailscale-archive-keyring all 1.35.181 [3,082 B]                                                        
-Fetched 38.7 MB in 24s (1,611 kB/s)                                                                                                                                      
-Selecting previously unselected package tailscale.
-(Reading database… 237335 files and directories currently installed.)
-Preparing to unpack …/tailscale_1.102.4_amd64.deb…
-Unpacking tailscale (1.102.4)…
-Selecting previously unselected package tailscale-archive-keyring.
-Preparing to unpack …/tailscale-archive-keyring_1.35.181_all.deb…
-Unpacking tailscale-archive-keyring (1.35.181)…
-Setting up tailscale-archive-keyring (1.35.181)…
-Setting up tailscale (1.102.4)…
-Created symlink '/etc/systemd/system/multi-user.target.wants/tailscaled.service' → '/usr/lib/systemd/system/tailscaled.service'.
-+ [ false = true ]
-+ set +x
-Installation complete! Log in to start using Tailscale by running:
+name: Install Tailscale
 
-sudo tailscale up
+on:
+  workflow_dispatch:
+
+jobs:
+  install-tailscale:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Tailscale
+        uses: tailscale/github-action@v2
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:ci
